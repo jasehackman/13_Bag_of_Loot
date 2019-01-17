@@ -17,7 +17,7 @@ class Lootbag():
       return "Please add an argument"
     elif len(terminalString[0]) == 2:
       if terminalString[0][1] == "ls":
-        return "You LS'd!"
+        return self.kidsWhoGetPressents(terminalString[0])
       else:
         return "Incorrect input"
     elif len(terminalString[0]) == 3:
@@ -28,17 +28,26 @@ class Lootbag():
       else:
         return "Incorrect input"
     elif len(terminalString[0]) == 4 :
-
       if terminalString[0][1] == 'add':
-        return "You added!"
-
+        return self.addToy(terminalString[0])
       elif terminalString[0][1] == 'remove':
-        return "You removed :("
-
+        return self.removeToy(terminalString[0])
       else:
         return "Incorect input"
     else:
       return "Too many arguments"
+
+  def addToy(self, termList):
+    print(termList)
+    return "You added!"
+
+  def removeToy(self, termList):
+    print(termList)
+    return "You removed :("
+
+  def kidsWhoGetPressents(self, termList):
+    print(termList)
+    return "You LS'd!"
 
 
 if __name__ == "__main__":
