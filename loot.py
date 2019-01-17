@@ -13,19 +13,32 @@ lootbag_db = 'lootbag.sql'
 class Lootbag():
 
   def terminalCatch(self, *terminalString):
-    print(terminalString)
-    if terminalString[0][1] == 'add':
-      return "You added!"
-    elif terminalString[0][1] == 'remove':
-      return "You removed :("
-    elif terminalString[0][1] == 'delivered':
-      return "Delivered!"
-    elif terminalString[0][1] == 'ls' and terminalString[0][2]:
-      return "ls and name"
-    elif terminalString[0][1] == "ls":
-      return "You LS'd!"
+    if len(terminalString[0]) < 2:
+      return "Please add an argument"
+    elif len(terminalString[0]) == 2:
+      if terminalString[0][1] == "ls":
+        return "You LS'd!"
+      else:
+        return "Incorrect input"
+    elif len(terminalString[0]) == 3:
+      if terminalString[0][1] == 'delivered':
+        return "Delivered!"
+      elif terminalString[0][1] == 'ls' and terminalString[0][2]:
+        return "ls and name"
+      else:
+        return "Incorrect input"
+    elif len(terminalString[0]) == 4 :
+
+      if terminalString[0][1] == 'add':
+        return "You added!"
+
+      elif terminalString[0][1] == 'remove':
+        return "You removed :("
+
+      else:
+        return "Incorect input"
     else:
-      return "Incorect data"
+      return "Too many arguments"
 
 
 if __name__ == "__main__":
