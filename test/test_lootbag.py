@@ -22,13 +22,15 @@ class TestTerminalCatch(unittest.TestCase):
     print('Tear down class')
 
   def test_terminalComands(self):
-    self.assertEqual(self.lootClass.terminalCatch(("",'add', "string", "string")),"You added!")
-    self.assertEqual(self.lootClass.terminalCatch(("",'remove', "string", "string")),"You removed :(")
     self.assertEqual(self.lootClass.terminalCatch(("", 'hi')),"Incorrect input")
     self.assertEqual(self.lootClass.terminalCatch(("")),"Please add an argument")
 
+  def test_removeToy(self):
+    self.assertEqual(self.lootClass.terminalCatch(("",'remove', "Bob", "watch")),"You removed :(")
+
+
   def test_addToy(self):
-        self.assertEqual(self.lootClass.terminalCatch(("",'add', "watch", "Bob")),"You added!")
+    self.assertEqual(self.lootClass.terminalCatch(("",'add', "hat", "Bob")),"You added!")
 
   def test_kidsWhoGetPresents(self):
     self.assertEqual(self.lootClass.terminalCatch(("",'ls')),"You LS'd!")

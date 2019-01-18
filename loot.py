@@ -54,10 +54,16 @@ class Lootbag():
     with sqlite3.connect(lootbag_db) as conn:
       cursor = conn.cursor()
 
-      cursor.execute(f'''INSERT INTO Toys
-                          SELECT null, "{termList[2]}", c.ChildId
-                          From Children c
-                          WHERE c.Name = "{termList[3]}";''')
+      cursor.execute(f'''SELECT ToyId
+                          FROM Toys
+                          WHERE ToyName = "{termList[3]}";''')
+      name = cursor.fetchone()
+      print(name)
+    with sqlite3.connect(lootbag_db) as conn:
+      cursor = conn.cursor()
+      cursor.execute(f'''DELETE FROM Toys
+                          WHERE ToyId = {name[0]}'''
+                         )
     return "You removed :("
 
   def kidsWhoGetPressents(self, termList):
