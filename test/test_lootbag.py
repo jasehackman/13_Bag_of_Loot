@@ -26,11 +26,15 @@ class TestTerminalCatch(unittest.TestCase):
     self.assertEqual(self.lootClass.terminalCatch(("")),"Please add an argument")
 
   def test_removeToy(self):
-    self.assertEqual(self.lootClass.terminalCatch(("",'remove', "Bob", "watch")),"You removed :(")
+    self.assertEqual(self.lootClass.terminalCatch(("",'remove', "Bob", "box")),"You removed :(")
 
+  def test_help(self):
+    self.lootClass.terminalCatch(("", "help"))
 
   def test_addToy(self):
-    self.assertEqual(self.lootClass.terminalCatch(("",'add', "hat", "Bob")),"You added!")
+    # if a toy is added the function will return a value greater than zero. It will return zero if a toy was not added
+    self.assertTrue(self.lootClass.terminalCatch(("",'add', "box", "Bob")) > 0)
+    self.assertTrue(self.lootClass.terminalCatch(("",'add', "squid", "slkj"))==0)
 
   def test_kidsWhoGetPresents(self):
     self.assertEqual(self.lootClass.terminalCatch(("",'ls')),"You LS'd!")
@@ -42,6 +46,8 @@ class TestTerminalCatch(unittest.TestCase):
   def test_toysDelivered(self):
     self.assertEqual(self.lootClass.terminalCatch(("",'delivered',"Sue")),"Delivered!")
 
+  def test_badKid(self):
+    self.assertEqual(self.lootClass.badKid(("bad", "Sue")), "BadBOB")
 
 
 
