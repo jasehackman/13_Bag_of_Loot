@@ -28,3 +28,6 @@ CREATE TABLE 'Toys' (
 INSERT INTO 'Toys' VALUES (null, 'boat', 1);
 INSERT INTO 'Toys' VALUES (null, 'doll', 2);
 INSERT INTO 'Toys' VALUES (null, 'truck', 1);
+
+
+-- `sqlite3 database.db < createdb.sql`

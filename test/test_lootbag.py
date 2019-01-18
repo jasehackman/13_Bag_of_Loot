@@ -24,11 +24,18 @@ class TestTerminalCatch(unittest.TestCase):
   def test_terminalComands(self):
     self.assertEqual(self.lootClass.terminalCatch(("",'add', "string", "string")),"You added!")
     self.assertEqual(self.lootClass.terminalCatch(("",'remove', "string", "string")),"You removed :(")
-    self.assertEqual(self.lootClass.terminalCatch(("",'delivered',"string")),"Delivered!")
-    self.assertEqual(self.lootClass.terminalCatch(("",'ls',"string")),"ls and name")
-    self.assertEqual(self.lootClass.terminalCatch(("",'ls')),"You LS'd!")
     self.assertEqual(self.lootClass.terminalCatch(("", 'hi')),"Incorrect input")
     self.assertEqual(self.lootClass.terminalCatch(("")),"Please add an argument")
+
+  def test_kidsWhoGetPresents(self):
+    self.assertEqual(self.lootClass.terminalCatch(("",'ls')),"You LS'd!")
+
+
+  def test_singleKidPresent(self):
+    self.assertEqual(self.lootClass.terminalCatch(("",'ls',"Bob")),"ls and name")
+
+  def test_toysDelivered(self):
+    self.assertEqual(self.lootClass.terminalCatch(("",'delivered',"Sue")),"Delivered!")
 
 
 
