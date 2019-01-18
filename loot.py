@@ -13,11 +13,16 @@ lootbag_db = '../lootbag.db'
 class Lootbag():
 
   def terminalCatch(self, *terminalTuppleList):
+
+    '''Filters through comands recieved in the command line '''
+
     if len(terminalTuppleList[0]) < 2:
       return "Please add an argument"
     elif len(terminalTuppleList[0]) == 2:
       if terminalTuppleList[0][1] == "ls":
         return self.kidsWhoGetPressents(terminalTuppleList[0])
+      elif terminalTuppleList[0][1] == "help":
+        return self.help()
       else:
         return "Incorrect input"
     elif len(terminalTuppleList[0]) == 3:
@@ -37,36 +42,70 @@ class Lootbag():
     else:
       return "Too many arguments"
 
+  def help(self):
+    helping = '''
+      to execute:
+        python.py ls - Lists all children who will get presents
+        python.py ls [kidName] - List presents that kid will get
+        python.py add [kidName] [toyName] - adds the toy to the child
+        python.py remove [toyName] [kidName] - removes the toy from the child
+
+        '''
+
+    return print(helping)
+
   def addToy(self, termList):
+    '''Adds toys to a child that already exist in the database'''
+
     with sqlite3.connect(lootbag_db) as conn:
       cursor = conn.cursor()
-      cursor.execute(f'''INSERT INTO Toys
-                        SELECT ?, ?, ChildId
-                        From Children c
-                        WHERE c.Name = "{termList[3]}";''',(None, termList[2] ))
+      try:
+        cursor.execute(f'''INSERT INTO Toys
+                          SELECT ?, ?, ChildId
+                          From Children c
+                          WHERE c.Name = "{termList[3]}";''',(None, termList[2] ))
+        toy = cursor.lastrowid
+        print(toy)
+        if toy > 0:
+          print("You added a toy!")
+        else:
+          print("You did not add a toy.")
+        return toy
+
+      except sqlite3.OperationalError as err:
+                    print("oops", err)
 
 
-      kids = cursor.fetchall()
-      print(kids)
-    return "You added!"
 
   def removeToy(self, termList):
+    '''Removes a toy from the child and from the database'''
+    with sqlite3.connect(lootbag_db) as conn:
+      cursor = conn.cursor()
+
+      cursor.execute(f'''SELECT ChildId
+                          FROM Children
+                          WHERE Name = "{termList[2]}";''')
+      childname = cursor.fetchone()
+      print(childname)
     with sqlite3.connect(lootbag_db) as conn:
       cursor = conn.cursor()
 
       cursor.execute(f'''SELECT ToyId
                           FROM Toys
                           WHERE ToyName = "{termList[3]}";''')
-      name = cursor.fetchone()
-      print(name)
+      toyname = cursor.fetchone()
+      print(toyname)
     with sqlite3.connect(lootbag_db) as conn:
       cursor = conn.cursor()
       cursor.execute(f'''DELETE FROM Toys
-                          WHERE ToyId = {name[0]}'''
+                          WHERE ToyId = {toyname[0]}
+                          AND ChildId = {childname[0]}'''
                          )
     return "You removed :("
 
   def kidsWhoGetPressents(self, termList):
+    '''List the kids who get presents'''
+
     print(termList)
     with sqlite3.connect(lootbag_db) as conn:
       cursor = conn.cursor()
@@ -76,6 +115,7 @@ class Lootbag():
     return "You LS'd!"
 
   def singleKidsPresents(self, termList):
+    '''list the presents the named child will get'''
     print(termList[2])
     with sqlite3.connect(lootbag_db) as conn:
       cursor = conn.cursor()
@@ -88,6 +128,7 @@ class Lootbag():
     return "ls and name"
 
   def toysDelivered(self, termList):
+    '''states what toys have been delivered'''
     with sqlite3.connect(lootbag_db) as conn:
       cursor = conn.cursor()
       cursor.execute(f'''Update Children
@@ -96,6 +137,27 @@ class Lootbag():
       kids = cursor.fetchall()
       print(kids)
     return "Delivered!"
+
+  def badKid(self, termList):
+    '''adds a kid to the naughty list and removes all of their toys'''
+    with sqlite3.connect(lootbag_db) as conn:
+      cursor = conn.cursor()
+      cursor.execute(f'''Select ChildId
+                          FROM Children
+                          where Name = "{termList[1]}";''')
+      kid = cursor.fetchone()
+      print(kid)
+    with sqlite3.connect(lootbag_db) as conn:
+      cursor = conn.cursor()
+      cursor.execute(f'''Update Children
+                          set Good = 0
+                          where ChildId = "{kid[0]}";''')
+    with sqlite3.connect(lootbag_db) as conn:
+      cursor = conn.cursor()
+      cursor.execute(f'''DELETE FROM Toys
+                            WHERE ChildId = {kid[0]}''')
+
+    return "BadBOB"
 
 if __name__ == "__main__":
   loot = Lootbag()
