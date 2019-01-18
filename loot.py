@@ -38,11 +38,26 @@ class Lootbag():
       return "Too many arguments"
 
   def addToy(self, termList):
-    print(termList)
+    with sqlite3.connect(lootbag_db) as conn:
+      cursor = conn.cursor()
+      cursor.execute(f'''INSERT INTO Toys
+                        SELECT ?, ?, ChildId
+                        From Children c
+                        WHERE c.Name = "{termList[3]}";''',(None, termList[2] ))
+
+
+      kids = cursor.fetchall()
+      print(kids)
     return "You added!"
 
   def removeToy(self, termList):
-    print(termList)
+    with sqlite3.connect(lootbag_db) as conn:
+      cursor = conn.cursor()
+
+      cursor.execute(f'''INSERT INTO Toys
+                          SELECT null, "{termList[2]}", c.ChildId
+                          From Children c
+                          WHERE c.Name = "{termList[3]}";''')
     return "You removed :("
 
   def kidsWhoGetPressents(self, termList):

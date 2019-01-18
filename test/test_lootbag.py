@@ -27,6 +27,9 @@ class TestTerminalCatch(unittest.TestCase):
     self.assertEqual(self.lootClass.terminalCatch(("", 'hi')),"Incorrect input")
     self.assertEqual(self.lootClass.terminalCatch(("")),"Please add an argument")
 
+  def test_addToy(self):
+        self.assertEqual(self.lootClass.terminalCatch(("",'add', "watch", "Bob")),"You added!")
+
   def test_kidsWhoGetPresents(self):
     self.assertEqual(self.lootClass.terminalCatch(("",'ls')),"You LS'd!")
 
